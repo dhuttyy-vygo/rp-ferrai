@@ -16,6 +16,14 @@ html {
   font-size: 2.66vw;
 }
 
+.fr-img-cont {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+}
+
+[data-split="true"], [data-split="word"] {
+  overflow: hidden;
+}
+
 @media (width >= 768px) {
   html {
     font-size: .975vw;

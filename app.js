@@ -2,6 +2,7 @@ import { Reeller, ScrollerPlugin } from 'reeller';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Swiper } from 'swiper';
+import SplitType from 'split-type';
 
 // Register ScrollTrigger with gsap
 gsap.registerPlugin(ScrollTrigger);
@@ -14,10 +15,106 @@ Reeller.registerGSAP(gsap);
 Reeller.use(ScrollerPlugin);
 
 (() => {
+var textToSplit = function () {
+    const el = document.querySelectorAll('[data-split="true"]');
+
+     el.forEach((text) => {
+
+      new SplitType(text, { types: "words", wordClass: "wordsin"});
+     });
+
+     const textInline = document.querySelectorAll('[data-split="word"]');
+     textInline.forEach((words) => {
+        new SplitType(words, { types:"words", wordClass: "words-card"});
+      });
+  };
+
+  var preLoad = function (){
+    // prealoading animation //
+    const logo = document.querySelector(".fr-logo-preload"),
+    backdrop = document.querySelector(".fr-preloader"),
+    title = document.querySelectorAll(".wordsin");
     
+    
+    var tl = Qe.timeline();
+
+    tl.set(logo, {autoAlpha: 0});
+    tl.to(logo, {autoAlpha: 1, duration: 1.2, ease: "power2.out"}, .5);
+    tl.to(logo, {autoAlpha: 0, duration: 1.2, ease: "power4.out"}, 1.7);
+    tl.to(backdrop, {autoAlpha: 0, duration: 2, ease: "power2.out"}, 2.5);
+    tl.from(title, {yPercent: 100, duration: 1, ease: "power2.out", stagger: {amount: 1}}, 3);
+
+  };
+
+  
      
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     
+     textToSplit(),preLoad(),initializeSwiper();
+
+
+     setTimeout(() => {
+      $("[data-animate-in]").each(function (index) {
+        let textEl = $(this).find('[data-split="line"]');
+        let btn = $(this).find("a");
+        gsap.set(textEl, { autoAlpha: 1, willChange: "transform" });
+        let textContent = $(this).text();
+        let tl;
+  
+        function splitText() {
+          new SplitType(textEl, { types: "words", tagName: "span" });
+          textEl.find(".word").each(function (index) {
+            let lineContent = $(this).html();
+            $(this).html("");
+            $(this).append(
+              `<span class="line-inner" style="display: block;">${lineContent}</span>`
+            );
+          });
+          tl = gsap.timeline({
+            scrollTrigger: {
+              trigger: textEl,
+              start: "top bottom",
+              end: "bottom bottom",
+              toggleActions: "play none none none",
+            },
+          });
+          tl.fromTo(
+            textEl.find(".line-inner"),
+            { yPercent: 100, opacity: 0 },
+            {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.7,
+              stagger: { amount: 0.3, ease: "power4.out" },
+            }
+          );
+          tl.fromTo(
+            btn,
+            { yPercent: 100, opacity: 0 },
+            {
+              yPercent: 0,
+              opacity: 1,
+              duration: 0.7,
+              stagger: { amount: 0.3, ease: "power4.out" },
+            },
+            0.3
+          );
+        }
+        splitText();
+  
+        let windowWidth = window.innerWidth;
+        window.addEventListener("resize", function () {
+          if (windowWidth !== window.innerWidth) {
+            windowWidth = window.innerWidth;
+            tl.kill();
+            textEl.text(textContent);
+            splitText();
+          }
+        });
+      });
+    }, 700);
+
+
       const reels = document.querySelectorAll('.lg-reel');
       const evenReels = Array.from(reels).filter((_, index) => index % 2 === 0);
  
@@ -61,47 +158,32 @@ Reeller.use(ScrollerPlugin);
          });
       })
  
-     document.querySelectorAll(".lg-coach-accent-img").forEach((e) =>  {
  
+     document.querySelectorAll(".fr-flex-img").forEach((e) => {
          let t = Qe.timeline();
-     
-     
-         t.from(e, {
-             yPercent: -50,
-         }),
-         Sc.create({
-             trigger: e,
-             start: "top bottom",
-             end: "bottom top",
-             animation: t, 
-             scrub: 1, 
-         });
-     
-     
-     });
- 
-     document.querySelectorAll(".lg-comp").forEach((e) => {
-         let t = Qe.timeline();
-         let els = e.querySelectorAll('img');
+         let els = e.querySelectorAll('.fr-img-cont');
+         let tr = e.querySelectorAll(".words-card");
          
+                         
+             t.to(els, {
+                 clipPath: "polygon(100% 0, 0 0, 0 100%, 100% 100%)",
+                 ease: "power4.out",
+                 duration: 2,
+                 stagger: { amount: .5}
+             }, 0);
+             t.from(tr, {
+              yPercent: 100,
+              duration: 1.5,
+              ease: "Power4.out",
+              stagger: { amount: .3}
+             }, .4); 
          
-         els.forEach((el) => {
-             
-             
-             t.fromTo(el, {
-                 yPercent: -20,
-             }, {
-                 yPercent: 20,
-                 stagger: { amount: 0.1, from: "random" }
-             }, 0);  
-         });
      
          Sc.create({
              trigger: e,
-             start: "top bottom",
+             start: "top 95%",
              end: "bottom center",
              animation: t,
-             scrub: .3,
          });
      });
  
@@ -196,70 +278,36 @@ Reeller.use(ScrollerPlugin);
     
       // Function to initialize Swiper
 function initializeSwiper() {
-  const marquee = document.querySelectorAll(".lg-marquee");
+  const marquee = document.querySelectorAll(".fr-marquee");
   
   marquee.forEach((e) => {
-    const items = e.querySelector(".lg-marquee-items"),
-      item = e.querySelectorAll(".lg-marquee-item");
+    const items = e.querySelector(".fr-marquee-items"),
+      item = e.querySelectorAll(".fr-marquee-item");
 
     e.classList.add("swiper-container");
     items.classList.add("swiper-wrapper");
     item.forEach((e) => e.classList.add("swiper-slide"));
 
-    // const arrowPrev = document.createElement("div");
-    // arrowPrev.classList.add("lg-swipe-button", "button-prev");
-    // e.appendChild(arrowPrev);
-
-    // // Append the swiper-arrow button-next using JavaScript
-    // const arrowNext = document.createElement("div");
-    // arrowNext.classList.add("lg-swipe-button", "button-next");
-    // e.appendChild(arrowNext);
-
     const slider = new Swiper(e, {
-      slidesPerView: "auto",
-      loop: false,
+      
+      effect: "fade",
       // Adding navigation options
       navigation: {
-        nextEl: ".lg-swipe-button.next", // Specify the class for the next button
-        prevEl: ".lg-swipe-buotton.back",
+        nextEl: ".fr-swipe-button.next", // Specify the class for the next button
+        prevEl: ".fr-swipe-buotton.back",
         disabledClass: 'disabled' // Specify the class for the previous button
       },
-      // breakpoints: {
-      //   // When the window width is >= 576px
-      //   576: {
-      //     slidesPerView: 1,
-      //     spaceBetween: 20, // 1.5rem in pixels
-      //   },
-      //   // When the window width is >= 768px
-      //   768: {
-      //     slidesPerView: 1,
-      //     spaceBetween: 32, // 2rem in pixels
-      //   },
-        
-      // },
+      
     });
   });
-}
+    }
+  });
 
-// Check if the window width is less than 991px
-if (window.innerWidth < 991) {
-  initializeSwiper();
-}
-
-// Optional: Re-check on window resize
-window.addEventListener('resize', () => {
-  if (window.innerWidth < 991) {
-    initializeSwiper();
-  }
-});
-
-
-      // end
-    });
+  window.onbeforeunload = function () {
+    window.scrollTo(0, 0);
+  };
 })();
 
 
   
   
-
-
