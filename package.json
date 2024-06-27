@@ -1,0 +1,18 @@
+{
+  "name": "letsgo",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel app.js app.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "parcel": "^2.12.0",
+    "reeller": "^0.0.5",
+    "swiper": "^11.1.3"
+  }
+}
