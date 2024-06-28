@@ -68,17 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  Webflow.push(function () {
-    $("#play").click(function (e) {
-      e.preventDefault();
-      $("body").css("overflow", "hidden");
-    });
-
-    $("#pause").click(function (e) {
-      e.preventDefault();
-      $("body").css("overflow", "auto");
-    });
-  });
+ 
 
   let e = document.getElementById("player"),
     t = document.getElementById("play"),
