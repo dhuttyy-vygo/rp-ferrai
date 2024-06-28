@@ -49,60 +49,60 @@ var textToSplit = function () {
   
      
 document.addEventListener("DOMContentLoaded", function () {
+
+  $("#play").on("click", function () {
+    let videoPop = $("[video-modal]");
+    gsap.to(videoPop, {
+      autoAlpha: 1,
+      duration: 0.7,
+      ease: "power1.easeInOut",
+    });
+  });
+
+  $("#pause").on("click", function () {
+    let videoPop = $("[video-modal]");
+    gsap.to(videoPop, {
+      autoAlpha: 0,
+      duration: 0.3,
+      ease: "power1.easeInOut",
+    });
+  });
+
+  Webflow.push(function () {
+    $("#play").click(function (e) {
+      e.preventDefault();
+      $("body").css("overflow", "hidden");
+    });
+
+    $("#pause").click(function (e) {
+      e.preventDefault();
+      $("body").css("overflow", "auto");
+    });
+  });
+
+  let e = document.getElementById("player"),
+    t = document.getElementById("play"),
+    o = $("[video-modal]"),
+    a = document.getElementById("pause");
+  t.addEventListener("click", function () {
+    e.play();
+  }),
+    a.addEventListener("click", function () {
+      e.pause(), (e.currentTime = 0);
+    }),
+    e.addEventListener("webkitendfullscreen", function () {
+      e.pause(),
+        (e.currentTime = 0),
+        gsap.to(o, {
+          autoAlpha: 0,
+          duration: 0.3,
+          ease: "power1.easeInOut",
+        });
+    });
     
      textToSplit(),preLoad(),initializeSwiper();
 
-     $("#play").on("click", function () {
-      let videoPop = $("[video-modal]");
-      gsap.to(videoPop, {
-        autoAlpha: 1,
-        duration: 0.7,
-        ease: "power1.easeInOut",
-      });
-    });
-
-    $("#pause").on("click", function () {
-      let videoPop = $("[video-modal]");
-      gsap.to(videoPop, {
-        autoAlpha: 0,
-        duration: 0.3,
-        ease: "power1.easeInOut",
-      });
-    });
-
-    Webflow.push(function () {
-      $("#play").click(function (e) {
-        e.preventDefault();
-        $("body").css("overflow", "hidden");
-      });
-
-      $("#pause").click(function (e) {
-        e.preventDefault();
-        $("body").css("overflow", "auto");
-      });
-    });
-
-    let e = document.getElementById("player"),
-      t = document.getElementById("play"),
-      o = $("[video-modal]"),
-      a = document.getElementById("pause");
-    t.addEventListener("click", function () {
-      e.play();
-    }),
-      a.addEventListener("click", function () {
-        e.pause(), (e.currentTime = 0);
-      }),
-      e.addEventListener("webkitendfullscreen", function () {
-        e.pause(),
-          (e.currentTime = 0),
-          gsap.to(o, {
-            autoAlpha: 0,
-            duration: 0.3,
-            ease: "power1.easeInOut",
-          });
-      });
-    // New code ends here
-  });
+     
 
      setTimeout(() => {
       $("[data-animate-in]").each(function (index) {
