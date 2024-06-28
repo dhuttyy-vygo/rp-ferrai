@@ -24,6 +24,12 @@ html {
   overflow: hidden;
 }
 
+.fr-img-flexgrow:hover img {
+  will-change: auto;
+  transition: transform 3s ease-in;
+  transform: scale(1.1);
+}
+
 @media (width >= 768px) {
   html {
     font-size: .975vw;
